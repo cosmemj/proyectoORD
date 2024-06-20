@@ -1,64 +1,42 @@
 package org.vaadin.example;
 
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.NativeButtonRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
-/**
- * A sample Vaadin view class.
- * <p>
- * To implement a Vaadin view just extend any Vaadin component and use @Route
- * annotation to announce it in a URL as a Spring managed bean.
- * <p>
- * A new instance of this class is created for every new user and every browser
- * tab/window.
- * <p>
- * The main view contains a text field for getting the user name and a button
- * that shows a greeting message in a notification.
- */
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
+
 @Route
 public class MainView extends VerticalLayout {
 
-    /**
-     * Construct a new Vaadin view.
-     * <p>
-     * Build the initial UI state for the user accessing the application.
-     *
-     * @param service
-     *            The message service. Automatically injected Spring managed
-     *            bean.
-     */
-    public MainView(@Autowired GreetService service) {
+    public MainView(@Autowired GreetService service) throws URISyntaxException, IOException, InterruptedException {
+        List<Nave> listaNaves = service.getAllNaves();
 
-        // Use TextField for standard text input
-        TextField textField = new TextField("Your name");
-        textField.addClassName("bordered");
+        Grid<Nave> navesGrid = new Grid<>(Nave.class);
+        navesGrid.setColumns("name", "model", "cost_in_credits", "crew", "cargo_capacity", "consumables", "hyperdrive_rating", "starship_class", "pilots", "films");
+        navesGrid.getColumnByKey("name").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.getColumnByKey("model").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.getColumnByKey("cost_in_credits").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.getColumnByKey("crew").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.getColumnByKey("cargo_capacity").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.getColumnByKey("consumables").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.getColumnByKey("hyperdrive_rating").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.getColumnByKey("starship_class").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.getColumnByKey("pilots").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.getColumnByKey("films").setAutoWidth(true).setFlexGrow(0);
+        navesGrid.setSizeFull();
+        navesGrid.addColumn(
+                new NativeButtonRenderer<>("Generar",
+                        clickedItem -> {
+                            EscritorPDF pdf = new EscritorPDF();
+                            pdf.escribirNavePDF(clickedItem);
+                        })
+        );
 
-        // Button click listeners can be defined as lambda expressions
-        Button button = new Button("Say hello", e -> {
-            add(new Paragraph(service.greet(textField.getValue())));
-        });
-
-        // Theme variants give you predefined extra styles for components.
-        // Example: Primary button has a more prominent look.
-        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        // You can specify keyboard shortcuts for buttons.
-        // Example: Pressing enter in this view clicks the Button.
-        button.addClickShortcut(Key.ENTER);
-
-        // Use custom CSS classes to apply styling. This is defined in
-        // styles.css.
-        addClassName("centered-content");
-
-        add(textField, button);
     }
-
 }
