@@ -9,5 +9,6 @@ public class CmjApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CmjApplication.class, args);
 	}
+	public static String rutaDatos = "./src/main/resources/datos.json";
 
 }

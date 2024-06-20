@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class LectorJson {
+
     public ArrayList<Nave> leerJson (String fichero) {
         try {
             Gson gson = new Gson();
@@ -19,7 +20,7 @@ public class LectorJson {
 
             // Convierte el array JSON a un arraylist de users
             ArrayList<Nave> naves = new Gson().fromJson(reader, new TypeToken<ArrayList<Nave>>() {}.getType());
-            naves.forEach(System.out::println);// imprime los users
+//            naves.forEach(System.out::println);// imprime los users
             reader.close(); // Close reader
 
             return naves;
