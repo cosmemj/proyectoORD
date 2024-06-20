@@ -29,4 +29,20 @@ public class LectorJson {
             return new ArrayList<>(); // Si no ha leido nada, devuelve un array vacio
         }
     }
+    public boolean escribirJson(String fichero, ArrayList<Nave> naves){
+        try {
+            // Lee el fichero que le pasemos y lo abre en modo escritura
+            Writer writer = Files.newBufferedWriter(Paths.get(fichero));
+
+            // Convierte el arraylist de users a un array JSON, y lo escribe en el fichero
+            writer.write( new Gson().toJson(naves));
+
+            writer.close();// close reader
+            return true;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false; // Si no ha leido nada, devuelve un array vacio
+        }
+    }
 }
